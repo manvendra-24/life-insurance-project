@@ -8,31 +8,30 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 @Entity
 @Table(name = "documents")
+@Data
 public class Document {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long documentId;
+    private String documentId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull(message = "Document type is mandatory")
-    private DocumentType documentType;
+    @NotNull(message = "Document name is mandatory")
+    private DocumentType documentName;
 
     @Column(nullable = false)
-    @NotBlank(message = "Document name is mandatory")
-    private String documentName;
+    @NotBlank(message = "Document type is mandatory")
+    private String documentType;
 
     @Column(nullable = false)
     @NotBlank(message = "Document path is mandatory")
@@ -46,13 +45,4 @@ public class Document {
     @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = true)
-    private Employee employee;
-
-    @ManyToOne
-    @JoinColumn(name = "agent_id", nullable = true)
-    private Agent agent;
-
-    
 }
