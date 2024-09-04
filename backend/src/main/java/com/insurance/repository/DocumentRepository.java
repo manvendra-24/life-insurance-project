@@ -1,0 +1,13 @@
+package com.insurance.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.insurance.entities.Customer;
+import com.insurance.entities.Document;
+import com.insurance.enums.DocumentType;
+
+public interface DocumentRepository extends JpaRepository<Document, String>{
+
+	Document findByCustomerAndDocumentName(Customer customer, DocumentType documentTypeEnum);
+
+}
