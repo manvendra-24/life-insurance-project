@@ -1,23 +1,35 @@
 package com.insurance.util;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
+import com.insurance.entities.Agent;
+import com.insurance.entities.City;
 import com.insurance.entities.Employee;
 import com.insurance.entities.InsurancePlan;
 import com.insurance.entities.InsuranceScheme;
 import com.insurance.entities.InsuranceType;
+import com.insurance.entities.State;
 import com.insurance.exceptions.ResourceNotFoundException;
 import com.insurance.repository.InsurancePlanRepository;
 import com.insurance.repository.InsuranceTypeRepository;
+import com.insurance.repository.StateRepository;
+import com.insurance.request.CityRequest;
 import com.insurance.request.InsurancePlanRequest;
 import com.insurance.request.InsuranceSchemeRequest;
+import com.insurance.request.InsuranceTypeRequest;
+import com.insurance.request.StateRequest;
+import com.insurance.response.AgentResponse;
+import com.insurance.response.CityResponse;
 import com.insurance.response.EmployeeResponse;
 import com.insurance.response.InsurancePlanResponse;
 import com.insurance.response.InsuranceSchemeResponse;
+import com.insurance.response.InsuranceTypeResponse;
+import com.insurance.response.StateResponse;
 
 
 @Component
@@ -29,6 +41,10 @@ public class Mappers {
 	
 	@Autowired
 	InsurancePlanRepository insurancePlanRepository;
+	
+	  @Autowired
+	  StateRepository stateRepository;
+	  
 
 	
 
@@ -104,6 +120,74 @@ public class Mappers {
 	        response.setActive(insurancePlan.isActive());
 	        return response;
 	    }
+	    
+		  public State stateRequestToState(StateRequest stateRequest) {
+		      State state=new State();
+		      state.setName(stateRequest.getName());;
+		      state.setActive(true);
+		      return state;
+		    }
+
+		  public StateResponse stateToStateResponse(State state) {
+			    StateResponse stateResponse = new StateResponse();
+			    stateResponse.setStateId(state.getStateId());
+			    stateResponse.setName(state.getName());
+			    stateResponse.setActive(state.isActive());
+
+			    // Map the list of cities
+			    List<CityResponse> cityResponses = state.getCities().stream()
+			        .map(this::cityToCityResponse)
+			        .collect(Collectors.toList());
+
+			    stateResponse.setCities(cityResponses);
+			    return stateResponse;
+			}
+
+	   
+			public City cityRequestToCity(CityRequest cityRequest) {
+				
+				State state = stateRepository.findById(cityRequest.getState_id())
+		             .orElseThrow(() -> new IllegalArgumentException("Invalid state ID"));
+				 City city = new City();
+			        city.setName(cityRequest.getName());
+			        city.setState(state);
+			        city.setActive(true);
+				return city;	
+			}
+
+			public CityResponse cityToCityResponse(City city) {
+			    CityResponse cityResponse = new CityResponse();
+			    cityResponse.setCityId(city.getCityId());
+			    cityResponse.setName(city.getName());
+			    cityResponse.setActive(city.isActive());
+			    return cityResponse;
+			}
+			
+			public  InsuranceTypeResponse  insuranceTypeToInsuranceTypeResponse(InsuranceType insuranceType) {
+				InsuranceTypeResponse insuranceTypeResponse = new InsuranceTypeResponse();
+				insuranceTypeResponse.setActive(insuranceType.isActive());
+				insuranceTypeResponse.setName(insuranceType.getName());
+				insuranceTypeResponse.setInsuranceTypeId(insuranceType.getInsuranceTypeId());
+				return insuranceTypeResponse;
+			}
+			
+			 public AgentResponse agentToAgentResponse(Agent agent) {
+		          AgentResponse agentResponse = new AgentResponse();
+		          agentResponse.setAgentId(agent.getAgentId());
+		          agentResponse.setActive(agent.getUser().isActive());
+		          agentResponse.setEmail(agent.getUser().getEmail());
+		          agentResponse.setName(agent.getName());
+		          agentResponse.setUsername(agent.getUser().getUsername());
+		          return agentResponse;
+		      }
+			 public InsuranceType insuranceTypeRequestToInsuranceType(InsuranceTypeRequest typeRequest) {
+				    InsuranceType insuranceType = new InsuranceType();
+				    insuranceType.setName(typeRequest.getName());
+				    insuranceType.setActive(true);
+				    return insuranceType;
+				  }
+
+
 	
 
 }
