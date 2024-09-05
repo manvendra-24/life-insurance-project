@@ -1,11 +1,9 @@
 package com.insurance.interfaces;
 
-import com.insurance.entities.Agent;
 import com.insurance.request.CustomerRegisterRequest;
 import com.insurance.response.CustomerResponse;
 import com.insurance.util.PagedResponse;
 
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 public interface ICustomerService {

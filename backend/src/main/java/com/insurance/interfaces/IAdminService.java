@@ -2,6 +2,7 @@ package com.insurance.interfaces;
 
 import com.insurance.response.AdminResponse;
 import com.insurance.request.AdminRegisterRequest;
+import com.insurance.request.InsuranceSettingRequest;
 import com.insurance.request.TaxSettingRequest;
 import com.insurance.util.PagedResponse;
 
@@ -23,6 +24,9 @@ public interface IAdminService {
 	PagedResponse<AdminResponse> getAllAdmins(int page, int size, String sortBy, String direction);
 
 	String updateAdmin(String admin_id, AdminRegisterRequest adminRequest);
+
+
+	String createInsuranceSetting(InsuranceSettingRequest insuranceSettingRequestDto);
 
 
 
