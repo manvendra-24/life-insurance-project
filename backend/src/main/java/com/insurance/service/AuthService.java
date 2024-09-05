@@ -18,6 +18,7 @@ import com.insurance.repository.UserRepository;
 import com.insurance.request.LoginDto;
 import com.insurance.request.ProfileRequest;
 import com.insurance.request.AdminRegisterRequest;
+import com.insurance.request.ChangePasswordRequest;
 import com.insurance.security.JwtTokenProvider;
 import com.insurance.util.UniqueIdGenerator;
 
@@ -34,6 +35,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService implements IAuthService {
+	
+	@Autowired
+	EmailService emailService;
+	
+	
 
     private AuthenticationManager authenticationManager;
     private UserRepository userRepository;
@@ -182,7 +188,42 @@ public class AuthService implements IAuthService {
 	      
 	      return "Profile updated successfully"; 
 	  }
+	
+	 
+	    @Override
+	    public String changePassword(String token, ChangePasswordRequest profileRequest) {
+	        String username = jwtTokenProvider.getUsername(token);
+	        Optional<User> oUser = userRepository.findByUsernameOrEmail(username, username);
+	        if (oUser.isEmpty()) {
+//	            logger.warn("User not available for token: {}", token);
+	            throw new ResourceNotFoundException("User is not available");
+	        }
+	        User user = oUser.get();
+	  
+	        if (!passwordEncoder.matches(profileRequest.getCurrentPassword(), user.getPassword())) {
+	            throw new ApiException("Current password is wrong");
+	        }
+	        if (!profileRequest.getConfirmPassword().equals(profileRequest.getNewPassword())) {
+	            throw new ApiException("Confirm password is different from new password");
+	        } else {
+	            user.setPassword(passwordEncoder.encode(profileRequest.getNewPassword()));
+	            userRepository.save(user);
+	            String subject = "SecureLife Insurance - Password Changed Successfully";
+	            String emailBody = "Dear " + user.getUsername() + ",\n\n" +
+	                               "Your password has been successfully updated. If you did not make this change, please contact our support team immediately.\n\n" +
+	                               "Best Regards,\n" +
+	                               "SecureLife Insurance Team";
+
+	            
+	            emailService.sendEmail(user.getEmail(), subject, emailBody);
+	        }
+
+	        return "Password updated successfully";
+	    }
+
+
+	}
+
 
 	
 	
-}

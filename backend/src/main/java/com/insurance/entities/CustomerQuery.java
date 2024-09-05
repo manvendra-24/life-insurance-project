@@ -9,14 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+
+@Data
 @Entity
 @Table(name = "customer_queries")
-@Data
 public class CustomerQuery {
 
     @Id
@@ -40,7 +42,12 @@ public class CustomerQuery {
     @NotNull(message = "Submitted at date is mandatory")
     private LocalDateTime submittedAt;
 
-    
     private String status;  
+    
+    private String response;
+    
+    @ManyToOne
+    @JoinColumn(name="employee_id")
+    private Employee employee;
 
 }
