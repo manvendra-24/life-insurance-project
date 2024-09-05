@@ -20,8 +20,10 @@ import com.insurance.request.CityRequest;
 import com.insurance.response.CityResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 @PreAuthorize("hasRole('ADMIN')")
 public class CityController {
 
@@ -29,23 +31,25 @@ public class CityController {
   ICityService service;
   
   
-  //create city
-    @PostMapping("/city")
+  	//create city
+    @PostMapping("/cities")
+    @Operation(summary = "Register City -- BY ADMIN")
     public ResponseEntity<String> createCity(@RequestBody CityRequest cityRequest){
-      
       String response = service.createCity(cityRequest);
       return new ResponseEntity<>(response,HttpStatus.CREATED);
       
     }
     
     //update city
-    @PutMapping("/update-city/{id}")
+    @PutMapping("/city/{id}")
+    @Operation(summary = "Update City -- BY ADMIN")
     public ResponseEntity<String>updateCity(@PathVariable(name="id") String id,@RequestBody CityRequest cityRequest){
       return new ResponseEntity<String>(service.updateCity(id,cityRequest),HttpStatus.OK);
     }
     
     //deactivate city
     @DeleteMapping("/city/{id}")
+    @Operation(summary = "Deactivate city -- BY ADMIN")
     public ResponseEntity<String>deactivateCity(@PathVariable(name="id") String id){
       return new ResponseEntity<String>(service.deactivateCity(id),HttpStatus.OK);
       
@@ -53,18 +57,21 @@ public class CityController {
     
     //get city by id
     @GetMapping("/city/{id}")
+    @Operation(summary = "Get city by Id -- BY ADMIN")
     public ResponseEntity<CityResponse>getCityById(@PathVariable(name="id") String id){
       return new ResponseEntity<CityResponse>(service.getCityById(id),HttpStatus.OK);
     }
     
     //activate city
     @PutMapping("/city/{id}/activate")
+    @Operation(summary = "Activate City -- BY ADMIN")
     public ResponseEntity<String>activateCity(@PathVariable(name="id") String id){
       return new ResponseEntity<String>(service.activateCity(id),HttpStatus.OK);
     }
     
     //get all city
     @GetMapping("/cities")
+    @Operation(summary = "Get all Cities -- BY ADMIN")
     public ResponseEntity<PagedResponse<CityResponse>> getAllCities(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "5") int size,

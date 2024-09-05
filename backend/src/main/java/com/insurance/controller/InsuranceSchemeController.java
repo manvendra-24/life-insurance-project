@@ -19,9 +19,11 @@ import com.insurance.request.InsuranceSchemeRequest;
 import com.insurance.response.InsuranceSchemeResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 @PreAuthorize("hasRole('ADMIN')")
 public class InsuranceSchemeController {
 
@@ -30,7 +32,8 @@ public class InsuranceSchemeController {
 	IInsuranceSchemeService service;
 	
 	//get all insurance scheme
-    @GetMapping("/insurance-schemes")
+    @GetMapping("/schemes")
+    @Operation(summary= "Get all Insurance Schemes -- For ADMIN")
     public ResponseEntity<PagedResponse<InsuranceSchemeResponse>> getAllInsuranceSchemes(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "5") int size,
@@ -41,28 +44,32 @@ public class InsuranceSchemeController {
     }
     
     //create insurance scheme
-    @PostMapping("/insurance-schemes")
+    @PostMapping("/schemes")
+    @Operation(summary= "Create Insurance Scheme -- For ADMIN")
     public ResponseEntity<String> createInsuranceSchemes(@RequestBody InsuranceSchemeRequest schemeRequest){
         String response = service.createInsuranceScheme(schemeRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     //update insurance scheme
-    @PutMapping("/insurance-schemes/{id}")
+    @PutMapping("/scheme/{id}/update")
+    @Operation(summary= "Update Insurance Scheme -- For ADMIN")
     public ResponseEntity<String> updateInsuranceSchemes(@PathVariable String id,@RequestBody InsuranceSchemeRequest schemeRequest){
         String response = service.updateInsuranceScheme(id,schemeRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     //activate insurance scheme
-    @PutMapping("/insurance-schemes/{id}/activate")
+    @PutMapping("/scheme/{id}/activate")
+    @Operation(summary= "Activate Insurance Scheme -- For ADMIN")
     public ResponseEntity<String> activateInsuranceSchemes(@PathVariable String id){
         String response = service.activateInsuranceScheme(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     //delete insurance scheme
-    @DeleteMapping("/insurance-schemes/{id}")
+    @DeleteMapping("/scheme/{id}/delete")
+    @Operation(summary= "Delete Insurance Scheme -- For ADMIN")
     public ResponseEntity<String> deleteInsuranceSchemes(@PathVariable String id){
         String response = service.deleteInsuranceScheme(id);
         return new ResponseEntity<>(response, HttpStatus.OK);

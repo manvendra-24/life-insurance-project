@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 public class DocumentController {
 
     @Autowired
@@ -34,9 +34,9 @@ public class DocumentController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/upload")
+    @PostMapping("documents/upload")
     @PreAuthorize("hasRole = ('CUSTOMER')")
-    @Operation(summary= "upload document -- BY customer")
+    @Operation(summary= "Upload document -- BY CUSTOMER")
     public ResponseEntity<String> uploadFile(HttpServletRequest request, @RequestParam("type") String documentType, @RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             return new ResponseEntity<>("Please select a file to upload", HttpStatus.BAD_REQUEST);
@@ -60,7 +60,7 @@ public class DocumentController {
     
     @GetMapping("/customer/{customer_id}/documents")
     @PreAuthorize("hasRole = ('EMPLOYEE')")
-    @Operation(summary= "get document of a customer -- BY employee")
+    @Operation(summary= "Get Document of a customer -- BY EMPLOYEE")
     public ResponseEntity<List<DocumentResponse>> getDocuments(HttpServletRequest request, @PathVariable String customer_id) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -74,7 +74,7 @@ public class DocumentController {
     
     @GetMapping("/document/{document_id}/download")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    @Operation(summary= "download document -- BY employee")
+    @Operation(summary= "Download document -- BY EMPLOYEE")
     public ResponseEntity<Resource> downloadFile(HttpServletRequest request, @PathVariable String document_id) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

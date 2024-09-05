@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 @PreAuthorize("hasRole('ADMIN')")
 public class EmployeeController {
 
@@ -33,28 +33,31 @@ public class EmployeeController {
 	
 	//add employee
     @PostMapping("/employees")
-    @Operation(summary= "Create employee")
+    @Operation(summary= "Create employee -- BY ADMIN")
     public ResponseEntity<String> register(@RequestBody EmployeeRegisterRequest registerDto){
         String response = service.registerEmployee(registerDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     //update employee
-    @PutMapping("/employees/{employee_id}")
+    @PutMapping("/employee/{employee_id}")
+    @Operation(summary= "Update employee -- BY ADMIN")
     public ResponseEntity<String> updateEmployee(@PathVariable String employee_id, @RequestBody EmployeeRegisterRequest employeeRequest) {
         String response = service.updateEmployee(employee_id, employeeRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 	
     //delete employee
-    @DeleteMapping("/employees/{employee_id}")
+    @DeleteMapping("/employee/{employee_id}")
+    @Operation(summary= "Delete employee -- BY ADMIN")
     public ResponseEntity<String> deleteEmployee(@PathVariable String employee_id) {
         String response = service.deleteEmployee(employee_id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     //activate employee
-    @PutMapping("/employees/{employee_id}/active")
+    @PutMapping("/employee/{employee_id}/active")
+    @Operation(summary= "Activate employee -- BY ADMIN")
     public ResponseEntity<String> activateEmployee(@PathVariable String employee_id) {
         String response = service.activateEmployee(employee_id);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -62,6 +65,7 @@ public class EmployeeController {
     
     //get all employees
   	@GetMapping("/employees")
+    @Operation(summary= "Get all employees -- BY ADMIN")
   	public ResponseEntity<PagedResponse<EmployeeResponse>> getAllEmployees(
   					@RequestParam (name="page", defaultValue="0") int page,
   					@RequestParam (name="size", defaultValue="5") int size,

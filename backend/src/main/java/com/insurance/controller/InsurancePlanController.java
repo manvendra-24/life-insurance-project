@@ -19,9 +19,11 @@ import com.insurance.request.InsurancePlanRequest;
 import com.insurance.response.InsurancePlanResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 @PreAuthorize("hasRole('ADMIN')")
 public class InsurancePlanController {
 
@@ -29,7 +31,8 @@ public class InsurancePlanController {
 	IInsurancePlanService service;
 	
 	//get all insurance plans
-    @GetMapping("/insurance-plans")
+    @GetMapping("/plans")
+    @Operation(summary= "Get all Insurance Plans -- For ADMIN")
     public ResponseEntity<PagedResponse<InsurancePlanResponse>> getAllInsurancePlans(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size,
@@ -39,28 +42,32 @@ public class InsurancePlanController {
     }
 
     //create insurance plan
-    @PostMapping("/insurance-plans")
+    @PostMapping("/plans")
+    @Operation(summary= "Create Insurance Plans -- For ADMIN")
     public ResponseEntity<String> createInsurancePlan(@RequestBody InsurancePlanRequest planRequest) {
         String response = service.createInsurancePlan(planRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     //update insurance plan
-    @PutMapping("/insurance-plans/{id}")
+    @PutMapping("/plan/{id}/update")
+    @Operation(summary= "Update Insurance Plans -- For ADMIN")
     public ResponseEntity<String> updateInsurancePlan(@PathVariable String id, @RequestBody InsurancePlanRequest planRequest) {
         String response = service.updateInsurancePlan(id, planRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //activate insurance plan
-    @PutMapping("/insurance-plans/{id}/activate")
+    @PutMapping("/plan/{id}/activate")
+    @Operation(summary= "Activate Insurance Plans -- For ADMIN")
     public ResponseEntity<String> activateInsurancePlan(@PathVariable String id) {
         String response = service.activateInsurancePlan(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //delete insurance plan
-    @DeleteMapping("/insurance-plans/{id}")
+    @DeleteMapping("/plan/{id}/delete")
+    @Operation(summary= "Delete Insurance Pla -- For ADMIN")
     public ResponseEntity<String> deleteInsurancePlan(@PathVariable String id) {
         String response = service.deleteInsurancePlan(id);
         return new ResponseEntity<>(response, HttpStatus.OK);

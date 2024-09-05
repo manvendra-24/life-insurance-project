@@ -17,8 +17,7 @@ import com.insurance.util.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("/lifeInsurance")
-@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/SecureLife.com")
 public class AdminController {
 
 	@Autowired
@@ -28,7 +27,7 @@ public class AdminController {
     IAuthService authService;
     
     // Update admin
-    @PutMapping("/admins/{admin_id}")
+    @PutMapping("/admin/{admin_id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update admin -- BY ADMIN")
     public ResponseEntity<String> updateAdmin(@PathVariable String admin_id, @RequestBody AdminRegisterRequest adminRequest) {
@@ -37,7 +36,7 @@ public class AdminController {
     }
 
     // Delete admin
-    @DeleteMapping("/admins/{admin_id}")
+    @DeleteMapping("/admin/{admin_id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete admin -- BY ADMIN")
     public ResponseEntity<String> deleteAdmin(@PathVariable String admin_id) {
@@ -46,7 +45,7 @@ public class AdminController {
     }
 
     // Activate admin
-    @PutMapping("/admins/{admin_id}/active")
+    @PutMapping("/admin/{admin_id}/active")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Activate admin -- BY ADMIN")
     public ResponseEntity<String> activateAdmin(@PathVariable String admin_id) {
@@ -72,14 +71,16 @@ public class AdminController {
 
     // Create tax setting
     @PostMapping("/tax-setting")
-    @Operation(summary= "create Tax settting -- BY admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary= "Create Tax settting -- BY ADMIN")
     public ResponseEntity<String> createTaxSetting(@RequestBody TaxSettingRequest taxSettingRequest) {
         return new ResponseEntity<>(service.createTaxSetting(taxSettingRequest), HttpStatus.CREATED);
     }
     
     //create insurance setting
     @PostMapping("/insurance-setting")
-    @Operation(summary= "create insurance setting -- BY admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary= "Create insurance setting -- BY ADMIN")
     public ResponseEntity<String> createInsuranceSetting(@RequestBody InsuranceSettingRequest insuranceSettingRequestDto){
       return new ResponseEntity<String>(service.createInsuranceSetting(insuranceSettingRequestDto),HttpStatus.CREATED);
       

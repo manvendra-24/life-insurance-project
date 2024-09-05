@@ -7,6 +7,7 @@ import java.nio.file.AccessDeniedException;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.insurance.response.JWTAuthResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.insurance.request.LoginDto;
@@ -25,7 +27,7 @@ import com.insurance.interfaces.IAuthService;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/SecureLife.com")
 public class AuthController {
 
     private IAuthService authService;
@@ -36,8 +38,9 @@ public class AuthController {
         this.authService = authService;
     }
 
- // Build Login REST API
+    // Build Login REST API
     @PostMapping("/login")
+    @Operation(summary = "Login  -- For All")
     public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto){
       logger.info("A user is trying to login: " + loginDto.getUsernameOrEmail());
         String token = authService.login(loginDto);
@@ -55,7 +58,9 @@ public class AuthController {
     
 
     // Build Register REST API
-    @PostMapping("/register-admin")
+    @PostMapping("/admins")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Register Admin -- BY ADMIN")
     public ResponseEntity<String> register(@RequestBody AdminRegisterRequest registerDto){
       logger.info("A user is trying to register ");
         String response = authService.registerAdmin(registerDto);
@@ -63,7 +68,8 @@ public class AuthController {
     }
     
     
-    @PutMapping("/update-profile")
+    @PutMapping("/profile/update")
+    @Operation(summary = "Profile update  -- For All")
     public ResponseEntity<String>updateProfile(HttpServletRequest request,@RequestBody ProfileRequest profileRequest) throws AccessDeniedException{
     	 String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -76,7 +82,8 @@ public class AuthController {
 
     }
     
-    @PutMapping("/change-password")
+    @PutMapping("/password/change")
+    @Operation(summary = "Password change  -- For All")
     public ResponseEntity<String>changePassword(HttpServletRequest request,@RequestBody ChangePasswordRequest profileRequest) throws AccessDeniedException{
     	 String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -85,8 +92,6 @@ public class AuthController {
            return new ResponseEntity<>(response, HttpStatus.CREATED);
          }
          throw new AccessDeniedException("User is unauthorized");
-         
-
     }
    
 }

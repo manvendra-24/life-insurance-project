@@ -19,9 +19,11 @@ import com.insurance.request.InsuranceTypeRequest;
 import com.insurance.response.InsuranceTypeResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 @PreAuthorize("hasRole('ADMIN')")
 public class InsuranceTypeController {
 
@@ -29,15 +31,17 @@ public class InsuranceTypeController {
   @Autowired
   IInusranceService service;
   
-  //create insurance type
-    @PostMapping("/insurance-types")
+  	//create insurance type
+    @PostMapping("/types")
+    @Operation(summary= "Create Insurance Type -- For ADMIN")
     public ResponseEntity<String> createInsuranceType(@RequestBody InsuranceTypeRequest typeRequest){
         String response = service.createInsuranceType(typeRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     //update insurance type
-    @PutMapping("/insurance-types/{id}")
+    @PutMapping("/type/{id}/update")
+    @Operation(summary= "Delete Insurance Type -- For ADMIN")
     public ResponseEntity<String>updateInsuranceType( @PathVariable(name="id")String id,@RequestBody InsuranceTypeRequest typeRequest ){
       String response= service.updateInsuranceType(typeRequest,id);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -45,7 +49,8 @@ public class InsuranceTypeController {
     }
     
     //delete insurance type
-    @DeleteMapping("/insurance-types/{id}")
+    @DeleteMapping("/type/{id}/delete")
+    @Operation(summary= "Deactivate Insurance Type -- For ADMIN")
     public ResponseEntity<String>deactivatingInsuranceType(@PathVariable(name="id")String id){
       String response=service.deactivatingType(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -53,7 +58,8 @@ public class InsuranceTypeController {
     }
     
     //activate insurance type
-    @PutMapping("/insurance-types/{id}/active")
+    @PutMapping("/type/{id}/active")
+    @Operation(summary= "Activate Insurance Type -- For ADMIN")
     public ResponseEntity<String>activatingInsuranceType(@PathVariable(name="id")String id){
       String response=service.activatingType(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -61,7 +67,8 @@ public class InsuranceTypeController {
     }
     
     //get all insurance types
-    @GetMapping("/insurance-types")
+    @GetMapping("/types")
+    @Operation(summary= "Get all Insurance Types -- For ADMIN")
     public ResponseEntity<PagedResponse<InsuranceTypeResponse>> getAllTypes(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "5") int size,

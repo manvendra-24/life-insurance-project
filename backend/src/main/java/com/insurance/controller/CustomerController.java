@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.insurance.entities.Agent;
 import com.insurance.interfaces.ICustomerService;
 import com.insurance.request.CustomerRegisterRequest;
 import com.insurance.response.CustomerResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 public class CustomerController {
 
   
@@ -38,8 +38,9 @@ public class CustomerController {
 }
 
 
-  @PostMapping("/customer")
+  @PostMapping("/customers")
   @PreAuthorize("hasRole('AGENT')")
+  @Operation(summary = "Register Customer -- BY AGENT")
   public ResponseEntity<String>registerCustomer(HttpServletRequest request, @Valid @RequestBody CustomerRegisterRequest registerDto) throws AccessDeniedException {
 	  String authorizationHeader = request.getHeader("Authorization");
       if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -51,7 +52,8 @@ public class CustomerController {
   }
   
   @GetMapping("/customers")
-  @PreAuthorize("hasRole('EMPLOYEE')")
+  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+  @Operation(summary = "Get all customers -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<PagedResponse<CustomerResponse>> getAllCustomers(
           @RequestParam (name="page", defaultValue="0") int page,
           @RequestParam (name="size", defaultValue="5") int size,
@@ -63,26 +65,32 @@ public class CustomerController {
     return new ResponseEntity<>(customersResponse, HttpStatus.OK);
   }
   
-  @PutMapping("/update/{id}")
-  @PreAuthorize("hasRole('EMPLOYEE')")
+  @PutMapping("/customer/{id}/update")
+  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+  @Operation(summary = "Update customer -- BY EMPLOYEE & ADMIN")  
   public ResponseEntity<String> updateCustomer(@PathVariable("id") String id, @Valid @RequestBody CustomerRegisterRequest registerDto) {
       String response = service.updateCustomer(id, registerDto);
       return new ResponseEntity<>(response, HttpStatus.OK);
   }
-  @DeleteMapping("/deactivate-customer/{id}")
+  
+  @DeleteMapping("/customer/{id}/deactivate")
+  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+  @Operation(summary = "Activate customer -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<String> deactivateCustomer(@PathVariable("id") String id) {
       String response = service.deactivateCustomer(id);
       return new ResponseEntity<>(response, HttpStatus.OK);
   }
   
-  @PutMapping("/activate-customer/{id}")
-  @PreAuthorize("hasRole('EMPLOYEE')")
+  @PutMapping("/customer/{id}/activate")
+  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+  @Operation(summary = "Activate customer -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<String> activateCustomer(@PathVariable("id") String id) {
       String response = service.activateCustomer(id);
       return new ResponseEntity<>(response, HttpStatus.OK);
   }
-  @PutMapping("/verify-customer/approve/{id}")
+  @PutMapping("/customer/{id}/approve")
   @PreAuthorize("hasRole('EMPLOYEE')")
+  @Operation(summary = "Approve customer -- BY EMPLOYEE")
   public ResponseEntity<String>verifyCustomer(HttpServletRequest request,@PathVariable("id")String id) throws AccessDeniedException{
   	  String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -95,8 +103,9 @@ public class CustomerController {
         }
   }
   
-  @PutMapping("/verify-customer/reject/{id}")
+  @PutMapping("/customer/{id}/reject")
   @PreAuthorize("hasRole('EMPLOYEE')")
+  @Operation(summary = "Reject customer -- BY EMPLOYEE")
   public ResponseEntity<String>verifyCustomerReject(HttpServletRequest request,@PathVariable("id")String id) throws AccessDeniedException{
   	  String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

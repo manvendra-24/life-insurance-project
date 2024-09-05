@@ -20,18 +20,20 @@ import com.insurance.request.EmployeeQueryRequest;
 import com.insurance.response.CustomerQueryResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("lifeInsurance")
+@RequestMapping("/SecureLife.com")
 public class QueryController {
 	
 	@Autowired
 	IQueryService service;
 	
 	//createquery
-	@PostMapping("/query")
+	@PostMapping("/queries")
 	@PreAuthorize("hasRole('CUSTOMER')")
+    @Operation(summary = "Ask Query -- BY CUSTOMER")
 	public ResponseEntity<String>addQuery(HttpServletRequest request,@RequestBody CustomerQueryRequest queryRequest) throws AccessDeniedException{
 		 String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -45,9 +47,10 @@ public class QueryController {
 	}
          
          
-       //updateresponse
-         @PostMapping("/response-query/{id}")
+       	//updateresponse
+         @PostMapping("/query/{id}/response")
          @PreAuthorize("hasRole('EMPLOYEE')")
+         @Operation(summary = "Update Response for a query -- BY EMPLOYEE")
          public ResponseEntity<String>addResponseQuery(HttpServletRequest request,@RequestBody EmployeeQueryRequest queryRequest,@PathVariable("id")Long id) throws AccessDeniedException{
     		 String authorizationHeader = request.getHeader("Authorization");
              if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -63,9 +66,9 @@ public class QueryController {
 	
          
          //getAllQueries
-         
          @GetMapping("/queries")
          @PreAuthorize("hasRole('EMPLOYEE') or hasRole('CUSTOMER')")
+         @Operation(summary = "Get all queries -- BY EMPLOYEE & CUSTOMER")
          public ResponseEntity<PagedResponse<CustomerQueryResponse>> getAllQueries(
                  @RequestParam(name = "page", defaultValue = "0") int page,
                  @RequestParam(name = "size", defaultValue = "5") int size,
