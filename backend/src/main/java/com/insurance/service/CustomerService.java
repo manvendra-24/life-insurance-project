@@ -10,12 +10,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +39,6 @@ import com.insurance.util.Mappers;
 import com.insurance.util.PagedResponse;
 import com.insurance.util.UniqueIdGenerator;
 
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -53,11 +49,6 @@ public class CustomerService implements ICustomerService {
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
-    private String fromMail;
     
     @Autowired
     Mappers mappers;
@@ -154,14 +145,15 @@ public class CustomerService implements ICustomerService {
         userRepository.save(user);
         customer.setUser(user);
         customerRepository.save(customer);
-        String subject = "SecureLife Insurance - Your Account Has Been Approved!";
+        String subject = "SecureLife Insurance - Your Account Has Been Created!";
         String emailBody = "Dear " + customer.getUser().getUsername() + ",\n\n" +
-                           "Congratulations! Your account with SecureLife Insurance has been approved. " +
-                           "You are now ready to explore and choose the best insurance policies to safeguard your future.\n\n" +
-                           "If you need assistance, please feel free to reach out to our customer support team.\n\n" +
-                           "Thank you for choosing SecureLife Insurance.\n\n" +
-                           "Best Regards,\n" +
-                           "SecureLife Insurance Team";
+                "Your account with SecureLife Insurance has been created, but it is not yet approved. " +
+                "Please upload the required documents for verification to complete the process.\n\n" +
+                "Once your documents are verified, you'll be able to explore and choose the best insurance policies to safeguard your future.\n\n" +
+                "If you need assistance, please feel free to reach out to our customer support team.\n\n" +
+                "Thank you for choosing SecureLife Insurance.\n\n" +
+                "Best Regards,\n" +
+                "SecureLife Insurance Team";
         emailService.sendEmail(user.getEmail(), subject, emailBody);
         logger.info("Customer registered successfully with ID: {}", customer.getCustomerId());
         return "Customer created successfully!";
