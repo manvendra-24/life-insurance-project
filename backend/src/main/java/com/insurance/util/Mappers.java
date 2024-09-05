@@ -7,13 +7,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.insurance.entities.Admin;
 import com.insurance.entities.Agent;
 import com.insurance.entities.City;
 import com.insurance.entities.Employee;
 import com.insurance.entities.InsurancePlan;
 import com.insurance.entities.InsuranceScheme;
 import com.insurance.entities.InsuranceType;
+import com.insurance.entities.Policy;
 import com.insurance.entities.State;
+import com.insurance.entities.Transaction;
 import com.insurance.exceptions.ResourceNotFoundException;
 import com.insurance.repository.InsurancePlanRepository;
 import com.insurance.repository.InsuranceTypeRepository;
@@ -23,13 +26,17 @@ import com.insurance.request.InsurancePlanRequest;
 import com.insurance.request.InsuranceSchemeRequest;
 import com.insurance.request.InsuranceTypeRequest;
 import com.insurance.request.StateRequest;
+import com.insurance.response.AdminResponse;
 import com.insurance.response.AgentResponse;
 import com.insurance.response.CityResponse;
+import com.insurance.response.CommissionResponse;
 import com.insurance.response.EmployeeResponse;
 import com.insurance.response.InsurancePlanResponse;
 import com.insurance.response.InsuranceSchemeResponse;
 import com.insurance.response.InsuranceTypeResponse;
+import com.insurance.response.PolicyResponse;
 import com.insurance.response.StateResponse;
+import com.insurance.response.TransactionResponse;
 
 
 @Component
@@ -100,6 +107,7 @@ public class Mappers {
 	        insurancePlan.setMaximumInvestmentAmount(request.getMaximumInvestmentAmount());
 	        insurancePlan.setProfitRatio(request.getProfitRatio());
 	        insurancePlan.setActive(request.isActive());
+	        insurancePlan.setCommission(request.getCommission());
 	        return insurancePlan;
 	    }
 		
@@ -118,6 +126,7 @@ public class Mappers {
 	        response.setMaximumInvestmentAmount(insurancePlan.getMaximumInvestmentAmount());
 	        response.setProfitRatio(insurancePlan.getProfitRatio());
 	        response.setActive(insurancePlan.isActive());
+	        response.setCommission(insurancePlan.getCommission());
 	        return response;
 	    }
 	    
@@ -186,6 +195,57 @@ public class Mappers {
 				    insuranceType.setActive(true);
 				    return insuranceType;
 				  }
+
+			 
+			 public AdminResponse adminToAdminResponse(Admin admin) {
+			        AdminResponse adminResponse = new AdminResponse();
+			        adminResponse.setAdminId(admin.getAdminId());
+			        adminResponse.setActive(admin.getUser().isActive());
+			        adminResponse.setEmail(admin.getUser().getEmail());
+			        adminResponse.setName(admin.getName());
+			        adminResponse.setUsername(admin.getUser().getUsername());
+			        return adminResponse;
+			    }
+			    
+			    public PolicyResponse convertToPolicyResponse(Policy policy) {
+			        PolicyResponse policyResponse = new PolicyResponse();
+			        policyResponse.setPolicyId(policy.getPolicyId());
+			        policyResponse.setPlan_id(policy.getPlan().getInsuranceId());
+			        policyResponse.setStartDate(policy.getStartDate());
+			        policyResponse.setEndDate(policy.getEndDate());
+			        policyResponse.setPolicyTerm(policy.getPolicyTerm());
+			        policyResponse.setTotalInvestmentAmount(policy.getTotalInvestmentAmount());
+			        policyResponse.setPaymentInterval(policy.getPaymentInterval());
+			        policyResponse.setInstallmentAmount(policy.getInstallmentAmount());
+			        policyResponse.setTotalAmountPaid(policy.getTotalAmountPaid());
+			        policyResponse.setNextPaymentDate(policy.getNextPaymentDate());
+
+			        return policyResponse;
+			    }
+			    
+			    public CommissionResponse convertToCommissionResponse(Policy policy) {
+			        CommissionResponse commissionResponse = new CommissionResponse();
+			        commissionResponse.setPolicyId(policy.getPolicyId());
+			        commissionResponse.setPlan_id(policy.getPlan().getInsuranceId());
+			        commissionResponse.setStartDate(policy.getStartDate());
+			        commissionResponse.setEndDate(policy.getEndDate());
+			        commissionResponse.setPolicyTerm(policy.getPolicyTerm());
+			        commissionResponse.setTotalInvestmentAmount(policy.getTotalInvestmentAmount());
+			        commissionResponse.setPaymentInterval(policy.getPaymentInterval());
+			        commissionResponse.setCommission(policy.getPlan().getCommission());
+			        return commissionResponse;
+			    }
+			    
+			    public TransactionResponse transactionToTransactionResponse(Transaction transaction) {
+				    TransactionResponse transactionResponse = new TransactionResponse();
+				    transactionResponse.setTransactionId(transaction.getTransactionId());
+				    transactionResponse.setPolicyId(transaction.getPolicy().getPolicyId());
+				    transactionResponse.setTransactionType(transaction.getTransactionType().toString());
+				    transactionResponse.setAmount(transaction.getAmount());
+				    transactionResponse.setDate(transaction.getDate());
+				    transactionResponse.setStatus(transaction.getStatus().toString());
+				    return transactionResponse;
+				}
 
 
 	

@@ -16,4 +16,5 @@ public class InsurancePlanResponse {
     private double maximumInvestmentAmount;
     private double profitRatio;
     private boolean active;
+    private int commission;
 }

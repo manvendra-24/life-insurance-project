@@ -16,7 +16,9 @@ import com.insurance.entities.Employee;
 import com.insurance.entities.InsurancePlan;
 import com.insurance.entities.InsuranceScheme;
 import com.insurance.entities.InsuranceType;
+import com.insurance.entities.Policy;
 import com.insurance.entities.State;
+import com.insurance.entities.Transaction;
 import com.insurance.entities.User;
 import com.insurance.repository.AdminRepository;
 import com.insurance.repository.AgentRepository;
@@ -27,7 +29,9 @@ import com.insurance.repository.EmployeeRepository;
 import com.insurance.repository.InsurancePlanRepository;
 import com.insurance.repository.InsuranceSchemeRepository;
 import com.insurance.repository.InsuranceTypeRepository;
+import com.insurance.repository.PolicyRepository;
 import com.insurance.repository.StateRepository;
+import com.insurance.repository.TransactionRepository;
 import com.insurance.repository.UserRepository;
 
 @Component
@@ -45,7 +49,9 @@ public class UniqueIdGenerator {
                              InsurancePlanRepository insurancePlanRepository,
                              InsuranceTypeRepository insuranceTypeRepository,
                              InsuranceSchemeRepository insuranceSchemeRepository,
-                             DocumentRepository documentRepository) {
+                             DocumentRepository documentRepository,
+                             PolicyRepository policyRepository,
+                             TransactionRepository transactionRepository) {
 
         repositories.put(User.class, userRepository);
         repositories.put(Customer.class, customerRepository);
@@ -58,7 +64,8 @@ public class UniqueIdGenerator {
         repositories.put(InsuranceType.class, insuranceTypeRepository);
         repositories.put(InsuranceScheme.class, insuranceSchemeRepository);
         repositories.put(Document.class, documentRepository);
-
+        repositories.put(Policy.class, policyRepository);
+        repositories.put(Transaction.class, transactionRepository);
     }
 
     public <T> String generateUniqueId(Class<T> entityClass) {
@@ -92,9 +99,13 @@ public class UniqueIdGenerator {
             return "TYPE";
         } else if (entityClass.equals(InsuranceScheme.class)) {
             return "SCHEME";
-        } else if(entityClass.equals(Document.class)) {
-        	return "DOC";
-        }else {
+        } else if (entityClass.equals(Document.class)) {
+            return "DOC";
+        } else if (entityClass.equals(Policy.class)) {
+            return "POL";
+        } else if (entityClass.equals(Transaction.class)) {
+            return "TXN";
+        } else {
             throw new IllegalArgumentException("Unknown entity class: " + entityClass.getName());
         }
     }
@@ -144,6 +155,10 @@ public class UniqueIdGenerator {
             return "getInsuranceSchemeId";
         } else if (entityClass.equals(Document.class)) {
             return "getDocumentId";
+        } else if (entityClass.equals(Policy.class)) {
+            return "getPolicyId";
+        } else if (entityClass.equals(Transaction.class)) {
+            return "getTransactionId";
         } else {
             throw new IllegalArgumentException("Unknown entity class: " + entityClass.getName());
         }
@@ -168,5 +183,5 @@ public class UniqueIdGenerator {
         int numericPart = Integer.parseInt(lastId.substring(prefix.length()));
         return String.format(prefix + "%0" + numericPartLength + "d", numericPart + 1);
     }
-
 }
+

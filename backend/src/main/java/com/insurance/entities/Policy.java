@@ -1,6 +1,9 @@
 package com.insurance.entities;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.insurance.enums.PaymentInterval;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,8 +17,7 @@ import lombok.Data;
 public class Policy {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long policyId;
+    private String policyId;
 
     @ManyToOne
     @JoinColumn(name = "plan_id", nullable = false)
@@ -36,9 +38,37 @@ public class Policy {
     @NotNull(message = "End date cannot be null")
     @FutureOrPresent(message = "End date must be in the future or present")
     private LocalDate endDate;
-
-    private String status; 
-
+    
+    
+    @Column(nullable = false)
+    @NotNull(message = "Policy term cannot be null")
+    private int policyTerm;
+    
+    @Column(nullable = false)
+    @NotNull(message = "Total Investment Amount cannot be null")
+    private int totalInvestmentAmount;
+    
+    @Column(nullable = false)
+    @NotNull(message = "Payment interval cannot be null")
+    @Enumerated(EnumType.STRING)
+    private PaymentInterval paymentInterval;
+    
+    @Column(nullable = false)
+    @NotNull(message = "Installment Amount cannot be null")
+    private int installmentAmount;
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "agent_id")
+    private Agent agent;
+    
+    
+    @Column(nullable = false)
+    @NotNull(message = "Total Amount Paid cannot be null")
+    private int totalAmountPaid;
+    
+    @Column(nullable = false)
+    @NotNull(message = "Next Payment Date cannot be null")
     private LocalDate nextPaymentDate;
 
 }
