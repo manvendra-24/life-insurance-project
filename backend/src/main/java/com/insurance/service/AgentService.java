@@ -68,6 +68,8 @@ public class AgentService implements IAgentService {
 	
 	@Autowired
 	UniqueIdGenerator uniqueIdGenerator;
+	@Autowired
+	EmailService emailService;
 	
 	//manage agents
 		@Override
@@ -120,6 +122,15 @@ public class AgentService implements IAgentService {
 	        userRepository.save(user);
 	        agent.setUser(user);
 	        agentRepository.save(agent);
+	        String subject = "Welcome to SecureLife Insurance - Your Agent Account Has Been Created!";
+	        String emailBody = "Dear " + registerDto.getName() + ",\n\n" +
+	                           "Congratulations! Your agent account has been successfully created at SecureLife Insurance. " +
+	                           "You are now part of our trusted network, helping clients secure their futures with our policies.\n\n" +
+	                           "Best Regards,\n" +
+	                           "SecureLife Insurance Team";
+	        
+	        
+	        emailService.sendEmail(user.getEmail(), subject, emailBody);
 
 	        
 	        return "Agent created successfully!";

@@ -10,9 +10,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +42,7 @@ import com.insurance.util.Mappers;
 import com.insurance.util.PagedResponse;
 import com.insurance.util.UniqueIdGenerator;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -49,6 +53,11 @@ public class CustomerService implements ICustomerService {
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromMail;
     
     @Autowired
     Mappers mappers;

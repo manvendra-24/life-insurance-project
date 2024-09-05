@@ -25,9 +25,9 @@ import com.insurance.util.PagedResponse;
 import com.insurance.util.UniqueIdGenerator;
 
 @Service
-public class CiyService implements ICityService {
+public class CityService implements ICityService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CiyService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CityService.class);
 
     @Autowired
     CityRepository cityRepository;
