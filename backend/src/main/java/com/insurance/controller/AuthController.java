@@ -20,11 +20,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import com.insurance.request.LoginDto;
 import com.insurance.request.ProfileRequest;
 import com.insurance.request.AdminRegisterRequest;
+import com.insurance.request.ChangePasswordRequest;
+import com.insurance.request.EmployeeRegisterRequest;
 import com.insurance.interfaces.IAuthService;
 
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private IAuthService authService;
@@ -35,44 +37,57 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // Build Login REST API
+ // Build Login REST API
     @PostMapping("/login")
     public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto){
-    	logger.info("A user is trying to login: " + loginDto.getUsernameOrEmail());
+      logger.info("A user is trying to login: " + loginDto.getUsernameOrEmail());
         String token = authService.login(loginDto);
         String role = authService.getRole(token);
         JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
         jwtAuthResponse.setUsername(loginDto.getUsernameOrEmail());
         jwtAuthResponse.setRole(role);
+        
+
         return ResponseEntity.ok()
-	            .header("Authorization", token)
-	            .body(jwtAuthResponse);    
-    }
+              .header("Authorization", token)
+              .body(jwtAuthResponse);    
+        }
     
     
 
-    // Build Register Admin REST API
+    // Build Register REST API
     @PostMapping("/register-admin")
     public ResponseEntity<String> register(@RequestBody AdminRegisterRequest registerDto){
-    	logger.info("A user is trying to register ");
+      logger.info("A user is trying to register ");
         String response = authService.registerAdmin(registerDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
-    //update profile
+    
     @PutMapping("/update-profile")
     public ResponseEntity<String>updateProfile(HttpServletRequest request,@RequestBody ProfileRequest profileRequest) throws AccessDeniedException{
-       String authorizationHeader = request.getHeader("Authorization");
+    	 String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
              String token = authorizationHeader.substring(7);
            String response = authService.profileUpdate(token,profileRequest );
            return new ResponseEntity<>(response, HttpStatus.CREATED);
          }
          throw new AccessDeniedException("User is unauthorized");
+         
+
     }
     
-    
-    
-    
-    
+    @PutMapping("/change-password")
+    public ResponseEntity<String>changePassword(HttpServletRequest request,@RequestBody ChangePasswordRequest profileRequest) throws AccessDeniedException{
+    	 String authorizationHeader = request.getHeader("Authorization");
+         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+             String token = authorizationHeader.substring(7);
+           String response = authService.changePassword(token,profileRequest );
+           return new ResponseEntity<>(response, HttpStatus.CREATED);
+         }
+         throw new AccessDeniedException("User is unauthorized");
+         
+
+    }
+   
 }

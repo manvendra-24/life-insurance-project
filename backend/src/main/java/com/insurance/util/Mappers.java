@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import com.insurance.entities.Admin;
 import com.insurance.entities.Agent;
 import com.insurance.entities.City;
+import com.insurance.entities.Customer;
+import com.insurance.entities.CustomerQuery;
 import com.insurance.entities.Employee;
 import com.insurance.entities.InsurancePlan;
 import com.insurance.entities.InsuranceScheme;
@@ -30,6 +32,8 @@ import com.insurance.response.AdminResponse;
 import com.insurance.response.AgentResponse;
 import com.insurance.response.CityResponse;
 import com.insurance.response.CommissionResponse;
+import com.insurance.response.CustomerQueryResponse;
+import com.insurance.response.CustomerResponse;
 import com.insurance.response.EmployeeResponse;
 import com.insurance.response.InsurancePlanResponse;
 import com.insurance.response.InsuranceSchemeResponse;
@@ -246,6 +250,28 @@ public class Mappers {
 				    transactionResponse.setStatus(transaction.getStatus().toString());
 				    return transactionResponse;
 				}
+			    public CustomerQueryResponse queryToCustomerQueryResponse(CustomerQuery query) {
+					CustomerQueryResponse queries=new CustomerQueryResponse();
+					queries.setCustomerId(query.getCustomer().getCustomerId());
+					queries.setEmployeeId(query.getEmployee().getEmployeeId());
+					queries.setMessage(query.getMessage());
+					queries.setStatus(query.getStatus());
+					queries.setQueryId(query.getQueryId());
+					queries.setResponse(query.getResponse());
+					queries.setSubject(query.getSubject());
+					queries.setSubmittedAt(query.getSubmittedAt());
+					return queries;
+				}
+			    public CustomerResponse customerToCustomerResponse(Customer customer) {
+			          CustomerResponse customerResponse = new CustomerResponse();
+			          customerResponse.setCustomerId(customer.getCustomerId());
+			          customerResponse.setActive(customer.getUser().isActive());
+			          customerResponse.setEmail(customer.getUser().getEmail());
+			          customerResponse.setName(customer.getName());
+			          customerResponse.setStatus(customer.getStatus().toString());
+			          customerResponse.setUsername(customer.getUser().getUsername());
+			          return customerResponse;
+			        }
 
 
 	

@@ -70,5 +70,8 @@ public class Policy {
     @Column(nullable = false)
     @NotNull(message = "Next Payment Date cannot be null")
     private LocalDate nextPaymentDate;
+    
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 
 }
