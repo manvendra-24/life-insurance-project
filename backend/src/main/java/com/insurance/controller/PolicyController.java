@@ -19,14 +19,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/lifeInsurance/policies")
+@RequestMapping("/SecureLife.com")
 public class PolicyController {
 
 	@Autowired
     private IPolicyService service;
 
     
-    @PostMapping
+    @PostMapping("/policies")
     @PreAuthorize("hasRole('CUSTOMER')")
     @Operation(summary = "Register policy -- BY CUSTOMER")
     public ResponseEntity<String> createPolicy(HttpServletRequest request, @Valid @RequestBody PolicyRequest policyRequest) {
@@ -39,7 +39,7 @@ public class PolicyController {
         throw new ApiException("User is unauthorized");
     }
 
-    @GetMapping
+    @GetMapping("/policies")
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get all Policies -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<PagedResponse<PolicyResponse>> getAllPolicies(
@@ -57,7 +57,7 @@ public class PolicyController {
         throw new ApiException("User is unauthorized");
     }
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/customer/{customerId}/policies")
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get Policies by Customer ID -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<PagedResponse<PolicyResponse>> getPoliciesByCustomerId(
@@ -77,7 +77,7 @@ public class PolicyController {
         throw new ApiException("User is unauthorized");
     }
     
-    @GetMapping("/agent/{agentId}")
+    @GetMapping("/agent/{agentId}/policies")
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get Policies by Agent ID -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<PagedResponse<CommissionResponse>> getCommissionByAgentId(
@@ -97,7 +97,7 @@ public class PolicyController {
         throw new ApiException("User is unauthorized");
     }
     
-    @GetMapping("/my-commissions")
+    @GetMapping("/mycommissions")
     @PreAuthorize("hasRole('AGENT')")
     @Operation(summary = "Get My Commission report -- BY Agent")
     public ResponseEntity<PagedResponse<CommissionResponse>> getMyCommission(
@@ -116,7 +116,7 @@ public class PolicyController {
         throw new ApiException("User is unauthorized");
     }
 
-    @GetMapping("/my-policies")
+    @GetMapping("/mypolicies")
     @PreAuthorize("hasRole('CUSTOMER')")
     @Operation(summary = "Get My Policies -- BY CUSTOMER")
     public ResponseEntity<PagedResponse<PolicyResponse>> getMyPolicies(

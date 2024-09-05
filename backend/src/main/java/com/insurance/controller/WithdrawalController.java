@@ -4,6 +4,7 @@ package com.insurance.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 public class WithdrawalController {
 
 	
@@ -27,7 +28,8 @@ public class WithdrawalController {
 	
 	//withdrawal request
 	@PostMapping("/policy/{policy_id}/withdrawal")
-	 @Operation(summary= "request withdrawal -- BY customer")
+    @PreAuthorize("hasRole('CUSTOMER')")
+	 @Operation(summary= "Request withdrawal -- BY CUSTOMER")
 	public ResponseEntity<String> withdrawalRequest(HttpServletRequest request, @PathVariable("policy_id") String policy_id) {
 	    	String authorizationHeader = request.getHeader("Authorization");
 	      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -41,7 +43,8 @@ public class WithdrawalController {
 	
 	// Approve withdrawal
     @PostMapping("/withdrawals/{withdrawal_id}/approve")
-    @Operation(summary= "approve withdrawal -- BY admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary= "Approve withdrawal -- BY ADMIN")
     public ResponseEntity<String> approveWithdrawal(HttpServletRequest request,@PathVariable long withdrawal_id) {
     	String authorizationHeader = request.getHeader("Authorization");
 	      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -54,7 +57,8 @@ public class WithdrawalController {
     
     // Reject withdrawal
     @PostMapping("/withdrawals/{withdrawal_id}/reject")
-    @Operation(summary= "reject withdrawal -- BY admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary= "Reject withdrawal -- BY ADMIN")
     public ResponseEntity<String> rejectWithdrawal(HttpServletRequest request,@PathVariable long withdrawal_id) {
     	String authorizationHeader = request.getHeader("Authorization");
 	      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

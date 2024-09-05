@@ -20,24 +20,28 @@ import com.insurance.request.StateRequest;
 import com.insurance.response.StateResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 @RestController
-@RequestMapping("/lifeInsurance")
+@RequestMapping("/SecureLife.com")
 @PreAuthorize("hasRole('ADMIN')")
 public class StateController {
 
   @Autowired
   IStateService service;
   
-  //create state
-    @PostMapping("/state")
+  	//create state
+    @PostMapping("/states")
+    @Operation(summary = "Register State -- BY ADMIN")
     public ResponseEntity<String> createState(@RequestBody StateRequest stateRequest){
       String response=service.createState(stateRequest);
       return new ResponseEntity<>(response,HttpStatus.CREATED);
       
     }
     
-    @PutMapping("/update-state/{id}")
+    @PutMapping("/state/{id}/update")
+    @Operation(summary = "Update state -- BY ADMIN")
     public ResponseEntity<String>updateState(@PathVariable("id")String id,@RequestBody  StateRequest stateRequest){
       String response = service.updateState(id,stateRequest);
       return new ResponseEntity<>(response,HttpStatus.OK);
@@ -46,6 +50,7 @@ public class StateController {
     
     //get state by id
     @GetMapping("/state/{id}")
+    @Operation(summary = "Get state by id -- BY ADMIN")
     public ResponseEntity<StateResponse> getStateById(@PathVariable("id") String id) {
         StateResponse stateResponse = service.getStateById(id);
         return new ResponseEntity<>(stateResponse, HttpStatus.OK);
@@ -53,6 +58,7 @@ public class StateController {
   
     //get all states
     @GetMapping("/states")
+    @Operation(summary = "Get all states -- BY ADMIN")
     public ResponseEntity<PagedResponse<StateResponse>> getAllStates(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "5") int size,
@@ -63,13 +69,15 @@ public class StateController {
   }
     
     //deactivate state
-    @DeleteMapping("/state/{id}")
+    @DeleteMapping("/state/{id}/delete")
+    @Operation(summary = "Deactivate state -- BY ADMIN")
     public ResponseEntity<String>deactivateState(@PathVariable(name="id") String id){
       return new ResponseEntity<String>(service.deactivateStateById(id),HttpStatus.OK);
     }
     
     //activate state
     @PutMapping("/state/{id}/active")
+    @Operation(summary = "Activate State -- BY ADMIN")
     public ResponseEntity<String>activateState(@PathVariable(name="id") String id){
       return new ResponseEntity<String>(service.activateStateById(id),HttpStatus.OK);
     }

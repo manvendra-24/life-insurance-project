@@ -39,12 +39,12 @@ public class SecurityConfiguration {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http.csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authorize -> authorize
-	        		 .requestMatchers("/api/request-otp", "/api/reset-password","/api/verify-otp").permitAll() 
 	            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml", 
 	                             "/swagger-resources/**", "/swagger-ui.html", "/webjars/**").permitAll()
-	            .requestMatchers("/api/auth/login").permitAll()
-	            .requestMatchers("/api/auth/register-admin").permitAll()
-
+	            .requestMatchers("/SecureLife.com/login").permitAll()
+	            .requestMatchers("/SecureLife.com/profile").permitAll()
+	            .requestMatchers("/SecureLife.com/password").permitAll()
+	            .requestMatchers("/SecureLife.com/otp").permitAll()
 	            .anyRequest().authenticated()
 	        )
 	        .exceptionHandling(exception -> exception

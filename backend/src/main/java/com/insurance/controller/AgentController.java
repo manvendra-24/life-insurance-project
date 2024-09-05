@@ -21,20 +21,21 @@ import com.insurance.request.AgentRegisterRequest;
 import com.insurance.response.AgentResponse;
 import com.insurance.util.PagedResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("/lifeInsurance")
-@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/SecureLife.com")
 public class AgentController {
 
   @Autowired
   IAgentService service;
 
-  //add agent
+  	//add agent
     @PostMapping("/agents")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+    @Operation(summary = "Register agent -- BY ADMIN & EMPLOYEE")
     public ResponseEntity<String> register(HttpServletRequest request,@RequestBody AgentRegisterRequest registerDto) throws AccessDeniedException{
       String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -46,24 +47,27 @@ public class AgentController {
         
     }
 
-    @PutMapping("/agents/{agent_id}")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PutMapping("/agent/{agent_id}")
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+    @Operation(summary = "Update agent -- BY ADMIN & EMPLOYEE")    
     public ResponseEntity<String> updateAgent(@PathVariable String agent_id, @RequestBody AgentRegisterRequest agentRequest) {
         String response = service.updateAgent(agent_id, agentRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     // delete agent
-    @DeleteMapping("/agents/{agent_id}")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @DeleteMapping("/agent/{agent_id}")
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+    @Operation(summary = "Delete agent -- BY ADMIN & EMPLOYEE")
     public ResponseEntity<String> deleteAgent(@PathVariable String agent_id) {
         String response = service.deleteAgent(agent_id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // activate agent
-    @PutMapping("/agents/{agent_id}/active")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PutMapping("/agent/{agent_id}/active")
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+    @Operation(summary = "Activate agent -- BY ADMIN & EMPLOYEE")    
     public ResponseEntity<String> activateAgent(@PathVariable String agent_id) {
         String response = service.activateAgent(agent_id);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -71,7 +75,8 @@ public class AgentController {
 
     //get all agents
     @GetMapping("/agents")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+    @Operation(summary = "Get all agents -- BY ADMIN & EMPLOYEE")    
     public ResponseEntity<PagedResponse<AgentResponse>> getAllAgents(
             @RequestParam (name="page", defaultValue="0") int page,
             @RequestParam (name="size", defaultValue="5") int size,
