@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -37,6 +39,8 @@ import com.insurance.util.UniqueIdGenerator;
 @Service
 public class DocumentService implements IDocumentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DocumentService.class);
+
     @Value("${file.upload-dir}")
     private String UPLOAD_DIR;
 
@@ -57,16 +61,19 @@ public class DocumentService implements IDocumentService {
 
     @Override
     public String uploadFile(String documentType, MultipartFile file, String username) throws IOException {
+        logger.info("Starting file upload for documentType: {} and username: {}", documentType, username);
+
         User user = userRepository.findByUsernameOrEmail(username, username)
                                   .orElseThrow(() -> new ResourceNotFoundException("User is not available"));
         Customer customer = customerRepository.findByUser(user);
-        
+        logger.info("Customer retrieved with ID: {}", customer.getCustomerId());
 
         String projectRoot = System.getProperty("user.dir");
         String uploadPath = projectRoot + File.separator + UPLOAD_DIR + customer.getCustomerId();
         File customerDir = new File(uploadPath);
         if (!customerDir.exists()) {
             customerDir.mkdirs();
+            logger.info("Created directory for customer at: {}", uploadPath);
         }
 
         String originalFileName = file.getOriginalFilename();
@@ -77,6 +84,7 @@ public class DocumentService implements IDocumentService {
         try {
             documentTypeEnum = DocumentType.valueOf(documentType.toUpperCase());
         } catch (IllegalArgumentException e) {
+            logger.error("Invalid document type: {}", documentType, e);
             throw new IllegalArgumentException("Invalid document type: " + documentType);
         }
 
@@ -84,13 +92,16 @@ public class DocumentService implements IDocumentService {
         if (existingDocument != null) {
             File existingFile = new File(existingDocument.getDocumentPath());
             if (existingFile.exists() && !existingFile.delete()) {
+                logger.error("Failed to delete existing file: {}", existingFile.getAbsolutePath());
                 throw new IOException("Failed to delete the existing file");
             }
             documentRepository.delete(existingDocument);
+            logger.info("Deleted existing document of type: {}", documentTypeEnum);
         }
 
         File dest = new File(customerDir, newFileName);
         file.transferTo(dest);
+        logger.info("File saved at: {}", dest.getAbsolutePath());
 
         Document document = new Document();
         document.setDocumentId(uniqueIdGenerator.generateUniqueId(Document.class));
@@ -101,66 +112,79 @@ public class DocumentService implements IDocumentService {
         document.setCustomer(customer);
         documentRepository.save(document);
 
+        logger.info("Document uploaded successfully with ID: {}", document.getDocumentId());
         return newFileName;
     }
 
-	@Override
-	public List<DocumentResponse> getDocuments(String customer_id, String username) {
-		User user = userRepository.findByUsernameOrEmail(username, username)
+    @Override
+    public List<DocumentResponse> getDocuments(String customer_id, String username) {
+        logger.info("Fetching documents for customer ID: {} and username: {}", customer_id, username);
+
+        User user = userRepository.findByUsernameOrEmail(username, username)
                 .orElseThrow(() -> new ResourceNotFoundException("User is not available"));
 		
-		Employee employee = employeeRepository.findByUser(user).orElse(null);
-		if(employee == null) {
-			throw new ApiException("Unauthorized");
-		}
+        Employee employee = employeeRepository.findByUser(user).orElse(null);
+        if (employee == null) {
+            logger.error("Unauthorized access by user: {}", username);
+            throw new ApiException("Unauthorized");
+        }
 		
-		Optional<Customer> oCustomer = customerRepository.findById(customer_id);
-		if(oCustomer.isEmpty()) {
-			throw new ResourceNotFoundException("Customer not found");
-		}
-		List<Document> documents = documentRepository.findByCustomer(oCustomer.get());
-		List<DocumentResponse> documentResponses = new ArrayList<>();
-		for(Document document: documents) {
-			DocumentResponse documentResponse = new DocumentResponse();
-			documentResponse.setDocumentId(document.getDocumentId());
-			documentResponse.setDocumentName(document.getDocumentName());
-			documentResponse.setDocumentType(document.getDocumentType());
-			documentResponse.setUploadDate(document.getUploadDate());
-			documentResponses.add(documentResponse);
-		}
-		return documentResponses;
-	}
+        Optional<Customer> oCustomer = customerRepository.findById(customer_id);
+        if (oCustomer.isEmpty()) {
+            logger.error("Customer not found with ID: {}", customer_id);
+            throw new ResourceNotFoundException("Customer not found");
+        }
+        logger.info("Customer found with ID: {}", customer_id);
 
-	@Override
-	public ResponseEntity<Resource> downloadFile(String username, String document_id) {
-	    User user = userRepository.findByUsernameOrEmail(username, username)
-	            .orElseThrow(() -> new ResourceNotFoundException("User is not available"));
+        List<Document> documents = documentRepository.findByCustomer(oCustomer.get());
+        List<DocumentResponse> documentResponses = new ArrayList<>();
+        for (Document document : documents) {
+            DocumentResponse documentResponse = new DocumentResponse();
+            documentResponse.setDocumentId(document.getDocumentId());
+            documentResponse.setDocumentName(document.getDocumentName());
+            documentResponse.setDocumentType(document.getDocumentType());
+            documentResponse.setUploadDate(document.getUploadDate());
+            documentResponses.add(documentResponse);
+        }
+        logger.info("Fetched {} documents for customer ID: {}", documentResponses.size(), customer_id);
+        return documentResponses;
+    }
 
-	    Employee employee = employeeRepository.findByUser(user).orElse(null);
-	    if (employee == null) {
-	        throw new ApiException("Unauthorized");
-	    }
+    @Override
+    public ResponseEntity<Resource> downloadFile(String username, String document_id) {
+        logger.info("Downloading file for document ID: {} and username: {}", document_id, username);
 
-	    Document document = documentRepository.findById(document_id)
-	            .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
+        User user = userRepository.findByUsernameOrEmail(username, username)
+                .orElseThrow(() -> new ResourceNotFoundException("User is not available"));
 
-	    File file = new File(document.getDocumentPath());
-	    if (!file.exists()) {
-	        throw new ResourceNotFoundException("File not found on the server");
-	    }
+        Employee employee = employeeRepository.findByUser(user).orElse(null);
+        if (employee == null) {
+            logger.error("Unauthorized access by user: {}", username);
+            throw new ApiException("Unauthorized");
+        }
 
-	    Resource resource = new FileSystemResource(file);
+        Document document = documentRepository.findById(document_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
 
-	    String contentType = "application/octet-stream";
-	    try {
-	        contentType = Files.probeContentType(file.toPath());
-	    } catch (IOException e) {
-	    }
+        File file = new File(document.getDocumentPath());
+        if (!file.exists()) {
+            logger.error("File not found at path: {}", document.getDocumentPath());
+            throw new ResourceNotFoundException("File not found on the server");
+        }
 
-	    return ResponseEntity.ok()
-	            .contentType(MediaType.parseMediaType(contentType))
-	            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-	            .body(resource);
-	}
+        Resource resource = new FileSystemResource(file);
 
+        String contentType = "application/octet-stream";
+        try {
+            contentType = Files.probeContentType(file.toPath());
+            logger.info("Detected file content type: {}", contentType);
+        } catch (IOException e) {
+            logger.warn("Could not determine file content type, defaulting to application/octet-stream", e);
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .body(resource);
+    }
 }
