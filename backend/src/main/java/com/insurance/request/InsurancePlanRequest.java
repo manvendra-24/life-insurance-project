@@ -33,4 +33,7 @@ public class InsurancePlanRequest {
     private double profitRatio;
 
     private boolean active;
+    
+    @Positive(message = "Commission must be positive")
+    private int commission;
 }

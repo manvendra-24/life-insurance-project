@@ -3,6 +3,7 @@ package com.insurance.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Entity
@@ -40,4 +41,7 @@ public class InsurancePlan {
     private double profitRatio;
 
     private boolean active;
+    
+    @Positive(message = "Commission must be positive")
+    private int commission;
 }

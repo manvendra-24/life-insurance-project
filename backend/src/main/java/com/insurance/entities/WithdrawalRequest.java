@@ -9,10 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Entity
@@ -25,18 +25,13 @@ public class WithdrawalRequest {
     private Long withdrawalRequestId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @NotNull(message = "User cannot be null")
-    private User user;
+    @JoinColumn(name = "customer_id", nullable = false)
+    @NotNull(message = "Customer cannot be null")
+    private Customer customer;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Request type cannot be blank")
-    private String requestType;  
-
-    @Column(nullable = false)
-    @NotNull(message = "Amount cannot be null")
-    @Positive(message = "Amount must be positive")
-    private Double amount;
+    @OneToOne
+    @JoinColumn(name = "policy_id")
+    private Policy policy;
 
     @Column(nullable = false)
     @NotNull(message = "Request date cannot be null")
@@ -44,7 +39,11 @@ public class WithdrawalRequest {
 
     @Column(nullable = false)
     @NotBlank(message = "Status cannot be blank")
-    private String status;  
+    private String status;
+    
+    @ManyToOne
+    @JoinColumn(name="admin_id")
+    private Admin admin;
     
     
 }
