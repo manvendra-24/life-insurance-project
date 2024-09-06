@@ -32,7 +32,7 @@ const Login = () => {
         successToast('Logged in successfully!');
         navigate('/agent-dashboard');
       } 
-      else if (data.role === 'Role_Employee') {
+      else if (data.role === 'Role_Empolyee') {
         successToast('Logged in successfully!');
         navigate('/employee-dashboard');
       }
@@ -69,8 +69,13 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+
                   />
                 </Form.Group>
+                
+                <Link to="/forget-password" className="text-decoration-none" >
+                 forgot password
+                </Link>
                 <Button type="submit" variant="primary" className="w-100">
                   Login
                 </Button>
