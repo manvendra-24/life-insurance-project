@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.insurance.security.JwtAuthenticationEntryPoint;
 import com.insurance.security.JwtAuthenticationFilter;
+
 
 @Configuration
 public class SecurityConfiguration {
@@ -43,14 +45,14 @@ public class SecurityConfiguration {
                                "/swagger-resources/", "/swagger-ui.html", "/webjars/").permitAll()
               //authentication end point
               .requestMatchers("/SecureLife.com/login").permitAll()
-              .requestMatchers("/SecureLife.com/profile").permitAll()
-              .requestMatchers("/SecureLife.com/password").permitAll()
+              .requestMatchers("/SecureLife.com/profile/**").permitAll()
+              .requestMatchers("/SecureLife.com/password/**").permitAll()
               
               //forgot password end points
-              .requestMatchers("/SecureLife.com/otp").permitAll()
+              .requestMatchers("/SecureLife.com/otp/**").permitAll()
               
               //admin end points
-              .requestMatchers("/SecureLife.com/admin/create").permitAll()
+              .requestMatchers("/SecureLife.com/admin/register").permitAll()
               .requestMatchers("/SecureLife.com/admins/**").hasRole("ADMIN")
               .requestMatchers("/SecureLife.com/admin/**").hasRole("ADMIN")
               .requestMatchers("/SecureLife.com/insurance-settings/**").hasRole("ADMIN")
@@ -129,6 +131,7 @@ public class SecurityConfiguration {
       http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
       return http.build();
   }
+  
 
 
 }
