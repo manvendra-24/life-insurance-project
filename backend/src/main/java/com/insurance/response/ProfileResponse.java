@@ -1,8 +1,8 @@
 package com.insurance.response;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
 public class ProfileResponse {
 	
 	

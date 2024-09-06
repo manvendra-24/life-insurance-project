@@ -32,9 +32,9 @@ const Login = () => {
         successToast('Logged in successfully!');
         navigate('/agent-dashboard');
       } 
-      else if (data.role === 'Role_Customer') {
+      else if (data.role === 'Role_Employee') {
         successToast('Logged in successfully!');
-        navigate('/customer-dashboard');
+        navigate('/employee-dashboard');
       }
     } catch(error){
       setError(error.specificMessage);

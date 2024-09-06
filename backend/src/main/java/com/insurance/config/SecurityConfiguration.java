@@ -43,14 +43,14 @@ public class SecurityConfiguration {
                                "/swagger-resources/", "/swagger-ui.html", "/webjars/").permitAll()
               //authentication end point
               .requestMatchers("/SecureLife.com/login").permitAll()
-              .requestMatchers("/SecureLife.com/profile").permitAll()
-              .requestMatchers("/SecureLife.com/password").permitAll()
+              .requestMatchers("/SecureLife.com/profile/**").permitAll()
+              .requestMatchers("/SecureLife.com/password/**").permitAll()
               
               //forgot password end points
-              .requestMatchers("/SecureLife.com/otp").permitAll()
+              .requestMatchers("/SecureLife.com/otp/**").permitAll()
               
               //admin end points
-              .requestMatchers("/SecureLife.com/admin/create").permitAll()
+              .requestMatchers("/SecureLife.com/admin/register").permitAll()
               .requestMatchers("/SecureLife.com/admins/**").hasRole("ADMIN")
               .requestMatchers("/SecureLife.com/admin/**").hasRole("ADMIN")
               .requestMatchers("/SecureLife.com/insurance-settings/**").hasRole("ADMIN")

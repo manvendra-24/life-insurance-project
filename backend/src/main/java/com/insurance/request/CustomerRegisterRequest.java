@@ -1,23 +1,6 @@
 package com.insurance.request;
 
-import java.time.LocalDate;
-import java.util.List;
 
-import com.insurance.entities.Agent;
-import com.insurance.entities.City;
-import com.insurance.entities.Document;
-import com.insurance.entities.Employee;
-import com.insurance.entities.User;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

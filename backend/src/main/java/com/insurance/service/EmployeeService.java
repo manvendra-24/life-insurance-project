@@ -14,11 +14,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.insurance.entities.Customer;
 import com.insurance.entities.Employee;
 import com.insurance.entities.Role;
 import com.insurance.entities.User;
-import com.insurance.enums.CreationStatusType;
 import com.insurance.exceptions.ApiException;
 import com.insurance.exceptions.ResourceNotFoundException;
 import com.insurance.interfaces.IEmployeeService;

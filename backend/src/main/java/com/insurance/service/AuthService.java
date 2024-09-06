@@ -6,7 +6,6 @@ import com.insurance.entities.Customer;
 import com.insurance.entities.Employee;
 import com.insurance.entities.Role;
 import com.insurance.entities.User;
-import com.insurance.enums.CreationStatusType;
 import com.insurance.exceptions.ApiException;
 import com.insurance.exceptions.ResourceNotFoundException;
 import com.insurance.interfaces.IAuthService;
@@ -20,7 +19,6 @@ import com.insurance.request.LoginDto;
 import com.insurance.request.ProfileRequest;
 import com.insurance.request.AdminRegisterRequest;
 import com.insurance.request.ChangePasswordRequest;
-import com.insurance.request.EmployeeRegisterRequest;
 import com.insurance.security.JwtTokenProvider;
 import com.insurance.util.UniqueIdGenerator;
 
@@ -34,7 +32,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -146,7 +143,7 @@ public class AuthService implements IAuthService {
                            "SecureLife Insurance Team";
 
         
-        //emailService.sendEmail(user.getEmail(), subject, emailBody);
+        emailService.sendEmail(user.getEmail(), subject, emailBody);
 
         logger.info("Admin registered successfully with username: {}", registerDto.getUsername());
         return "Admin registered successfully!";
