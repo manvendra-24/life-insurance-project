@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +33,7 @@ public class DocumentController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("documents/upload")
-    @PreAuthorize("hasRole = ('CUSTOMER')")
+    @PostMapping("document/upload")
     @Operation(summary= "Upload document -- BY CUSTOMER")
     public ResponseEntity<String> uploadFile(HttpServletRequest request, @RequestParam("type") String documentType, @RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
@@ -59,8 +57,7 @@ public class DocumentController {
     }
     
     @GetMapping("/customer/{customer_id}/documents")
-    @PreAuthorize("hasRole = ('EMPLOYEE')")
-    @Operation(summary= "Get Document of a customer -- BY EMPLOYEE")
+    @Operation(summary= "Get Document of a customer -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<List<DocumentResponse>> getDocuments(HttpServletRequest request, @PathVariable String customer_id) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -73,8 +70,7 @@ public class DocumentController {
     }
     
     @GetMapping("/document/{document_id}/download")
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    @Operation(summary= "Download document -- BY EMPLOYEE")
+    @Operation(summary= "Download document -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<Resource> downloadFile(HttpServletRequest request, @PathVariable String document_id) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

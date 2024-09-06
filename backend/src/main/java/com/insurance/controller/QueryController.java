@@ -5,7 +5,6 @@ import java.nio.file.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +29,8 @@ public class QueryController {
 	@Autowired
 	IQueryService service;
 	
-	//createquery
-	@PostMapping("/queries")
-	@PreAuthorize("hasRole('CUSTOMER')")
+	//create query
+	@PostMapping("/queries/ask")
     @Operation(summary = "Ask Query -- BY CUSTOMER")
 	public ResponseEntity<String>addQuery(HttpServletRequest request,@RequestBody CustomerQueryRequest queryRequest) throws AccessDeniedException{
 		 String authorizationHeader = request.getHeader("Authorization");
@@ -47,9 +45,8 @@ public class QueryController {
 	}
          
          
-       	//updateresponse
+       	//update response
          @PostMapping("/query/{id}/response")
-         @PreAuthorize("hasRole('EMPLOYEE')")
          @Operation(summary = "Update Response for a query -- BY EMPLOYEE")
          public ResponseEntity<String>addResponseQuery(HttpServletRequest request,@RequestBody EmployeeQueryRequest queryRequest,@PathVariable("id")Long id) throws AccessDeniedException{
     		 String authorizationHeader = request.getHeader("Authorization");
@@ -67,7 +64,6 @@ public class QueryController {
          
          //getAllQueries
          @GetMapping("/queries")
-         @PreAuthorize("hasRole('EMPLOYEE') or hasRole('CUSTOMER')")
          @Operation(summary = "Get all queries -- BY EMPLOYEE & CUSTOMER")
          public ResponseEntity<PagedResponse<CustomerQueryResponse>> getAllQueries(
                  @RequestParam(name = "page", defaultValue = "0") int page,

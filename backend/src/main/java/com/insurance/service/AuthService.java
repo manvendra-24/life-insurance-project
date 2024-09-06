@@ -145,7 +145,7 @@ public class AuthService implements IAuthService {
                            "SecureLife Insurance Team";
 
         
-        emailService.sendEmail(user.getEmail(), subject, emailBody);
+        //emailService.sendEmail(user.getEmail(), subject, emailBody);
         
         logger.info("Admin registered successfully with username: {}", registerDto.getUsername());
         return "Admin registered successfully!";

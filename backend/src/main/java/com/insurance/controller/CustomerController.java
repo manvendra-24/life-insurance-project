@@ -4,7 +4,6 @@ import java.nio.file.AccessDeniedException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +37,7 @@ public class CustomerController {
 }
 
 
-  @PostMapping("/customers")
-  @PreAuthorize("hasRole('AGENT')")
+  @PostMapping("/customer/register")
   @Operation(summary = "Register Customer -- BY AGENT")
   public ResponseEntity<String>registerCustomer(HttpServletRequest request, @Valid @RequestBody CustomerRegisterRequest registerDto) throws AccessDeniedException {
 	  String authorizationHeader = request.getHeader("Authorization");
@@ -52,7 +50,6 @@ public class CustomerController {
   }
   
   @GetMapping("/customers")
-  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
   @Operation(summary = "Get all customers -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<PagedResponse<CustomerResponse>> getAllCustomers(
           @RequestParam (name="page", defaultValue="0") int page,
@@ -66,7 +63,6 @@ public class CustomerController {
   }
   
   @PutMapping("/customer/{id}/update")
-  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
   @Operation(summary = "Update customer -- BY EMPLOYEE & ADMIN")  
   public ResponseEntity<String> updateCustomer(@PathVariable("id") String id, @Valid @RequestBody CustomerRegisterRequest registerDto) {
       String response = service.updateCustomer(id, registerDto);
@@ -74,7 +70,6 @@ public class CustomerController {
   }
   
   @DeleteMapping("/customer/{id}/deactivate")
-  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
   @Operation(summary = "Activate customer -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<String> deactivateCustomer(@PathVariable("id") String id) {
       String response = service.deactivateCustomer(id);
@@ -82,15 +77,13 @@ public class CustomerController {
   }
   
   @PutMapping("/customer/{id}/activate")
-  @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
   @Operation(summary = "Activate customer -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<String> activateCustomer(@PathVariable("id") String id) {
       String response = service.activateCustomer(id);
       return new ResponseEntity<>(response, HttpStatus.OK);
   }
   @PutMapping("/customer/{id}/approve")
-  @PreAuthorize("hasRole('EMPLOYEE')")
-  @Operation(summary = "Approve customer -- BY EMPLOYEE")
+  @Operation(summary = "Approve customer -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<String>verifyCustomer(HttpServletRequest request,@PathVariable("id")String id) throws AccessDeniedException{
   	  String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -104,8 +97,7 @@ public class CustomerController {
   }
   
   @PutMapping("/customer/{id}/reject")
-  @PreAuthorize("hasRole('EMPLOYEE')")
-  @Operation(summary = "Reject customer -- BY EMPLOYEE")
+  @Operation(summary = "Reject customer -- BY EMPLOYEE & ADMIN")
   public ResponseEntity<String>verifyCustomerReject(HttpServletRequest request,@PathVariable("id")String id) throws AccessDeniedException{
   	  String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
