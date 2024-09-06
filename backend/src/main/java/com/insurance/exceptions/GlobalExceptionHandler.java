@@ -77,6 +77,7 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
+	
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleException(Exception exc) {
 		ErrorResponse error = new ErrorResponse();

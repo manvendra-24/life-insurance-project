@@ -69,7 +69,7 @@ public class AuthController {
     @PutMapping("/profile/update")
     @Operation(summary = "Profile update  -- For All")
     public ResponseEntity<String>updateProfile(HttpServletRequest request,@RequestBody ProfileRequest profileRequest) throws AccessDeniedException{
-    	 String authorizationHeader = request.getHeader("Authorization");
+       String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
              String token = authorizationHeader.substring(7);
            String response = authService.profileUpdate(token,profileRequest );
@@ -83,7 +83,7 @@ public class AuthController {
     @PutMapping("/password/change")
     @Operation(summary = "Password change  -- For All")
     public ResponseEntity<String>changePassword(HttpServletRequest request,@RequestBody ChangePasswordRequest profileRequest) throws AccessDeniedException{
-    	 String authorizationHeader = request.getHeader("Authorization");
+       String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
              String token = authorizationHeader.substring(7);
            String response = authService.changePassword(token,profileRequest );
