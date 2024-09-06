@@ -4,7 +4,6 @@ package com.insurance.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,6 @@ public class WithdrawalController {
 	
 	//withdrawal request
 	@PostMapping("/policy/{policy_id}/withdrawal")
-    @PreAuthorize("hasRole('CUSTOMER')")
 	 @Operation(summary= "Request withdrawal -- BY CUSTOMER")
 	public ResponseEntity<String> withdrawalRequest(HttpServletRequest request, @PathVariable("policy_id") String policy_id) {
 	    	String authorizationHeader = request.getHeader("Authorization");
@@ -43,7 +41,6 @@ public class WithdrawalController {
 	
 	// Approve withdrawal
     @PostMapping("/withdrawals/{withdrawal_id}/approve")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary= "Approve withdrawal -- BY ADMIN")
     public ResponseEntity<String> approveWithdrawal(HttpServletRequest request,@PathVariable long withdrawal_id) {
     	String authorizationHeader = request.getHeader("Authorization");
@@ -57,7 +54,6 @@ public class WithdrawalController {
     
     // Reject withdrawal
     @PostMapping("/withdrawals/{withdrawal_id}/reject")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary= "Reject withdrawal -- BY ADMIN")
     public ResponseEntity<String> rejectWithdrawal(HttpServletRequest request,@PathVariable long withdrawal_id) {
     	String authorizationHeader = request.getHeader("Authorization");

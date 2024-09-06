@@ -3,7 +3,6 @@ package com.insurance.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.insurance.interfaces.IAdminService;
@@ -28,7 +27,6 @@ public class AdminController {
     
     // Update admin
     @PutMapping("/admin/{admin_id}")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update admin -- BY ADMIN")
     public ResponseEntity<String> updateAdmin(@PathVariable String admin_id, @RequestBody AdminRegisterRequest adminRequest) {
         String response = service.updateAdmin(admin_id, adminRequest);
@@ -37,7 +35,6 @@ public class AdminController {
 
     // Delete admin
     @DeleteMapping("/admin/{admin_id}")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete admin -- BY ADMIN")
     public ResponseEntity<String> deleteAdmin(@PathVariable String admin_id) {
         String response = service.deleteAdmin(admin_id);
@@ -46,7 +43,6 @@ public class AdminController {
 
     // Activate admin
     @PutMapping("/admin/{admin_id}/active")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Activate admin -- BY ADMIN")
     public ResponseEntity<String> activateAdmin(@PathVariable String admin_id) {
         String response = service.activateAdmin(admin_id);
@@ -55,7 +51,6 @@ public class AdminController {
 
     // Get all admins
     @GetMapping("/admins")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all admins -- BY ADMIN")
     public ResponseEntity<PagedResponse<AdminResponse>> getAllAdmins(
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -71,7 +66,6 @@ public class AdminController {
 
     // Create tax setting
     @PostMapping("/tax-setting")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary= "Create Tax settting -- BY ADMIN")
     public ResponseEntity<String> createTaxSetting(@RequestBody TaxSettingRequest taxSettingRequest) {
         return new ResponseEntity<>(service.createTaxSetting(taxSettingRequest), HttpStatus.CREATED);
@@ -79,7 +73,6 @@ public class AdminController {
     
     //create insurance setting
     @PostMapping("/insurance-setting")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary= "Create insurance setting -- BY ADMIN")
     public ResponseEntity<String> createInsuranceSetting(@RequestBody InsuranceSettingRequest insuranceSettingRequestDto){
       return new ResponseEntity<String>(service.createInsuranceSetting(insuranceSettingRequestDto),HttpStatus.CREATED);
