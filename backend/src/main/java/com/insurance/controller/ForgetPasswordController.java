@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/SecureLife.com")
+
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ForgetPasswordController {
 
 	@Autowired
@@ -23,7 +25,9 @@ public class ForgetPasswordController {
     @PostMapping("/otp/send")
     @Operation(summary= "Send Otp -- For All")
     public ResponseEntity<String> requestOtp(@RequestBody OtpForgetPasswordRequest otpForgetPasswordRequest) {
+    	System.out.println(otpForgetPasswordRequest.getUsernameOrEmail());
         String response = emailService.sendOtpForForgetPassword(otpForgetPasswordRequest.getUsernameOrEmail());
+  
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
