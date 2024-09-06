@@ -6,6 +6,9 @@ import AdminDashboard from './components/adminPages/AdminDashboard';
 import CustomerDashboard from './components/customerPages/CustomerDashboard';
 import AgentDashboard from './components/agentPages/AgentDashboard';
 import EmployeeDashboard from './components/employeePages/EmployeeDashboard';
+import RequestOtp from './components/RequestOtp';
+import VerifyOtp from './components/VerifyOtp';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   return (
@@ -17,6 +20,9 @@ function App() {
         <Route path="/customer-dashboard" element={<CustomerDashboard />}/>
         <Route path="/agent-dashboard" element={<AgentDashboard />}/>
         <Route path="/employee-dashboard" element={<EmployeeDashboard />}/>
+        <Route path="/forget-password" element={<RequestOtp />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

@@ -10,7 +10,7 @@ const PasswordService = {
       console.log(response.data);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Error sending OTP');
+      throw new Error(error.response?.data?.message ||'Error sending OTP');
     }
   },
 
@@ -19,7 +19,7 @@ const PasswordService = {
       const response = await axios.post(`${API_BASE_URL}/otp/verify`, { otp });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message   || 'Error verifying OTP');
+      throw new Error(error.response?.data?.message || 'Error verifying OTP');
     }
   },
 
