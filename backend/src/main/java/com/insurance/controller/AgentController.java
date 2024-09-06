@@ -5,7 +5,6 @@ import java.nio.file.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +33,6 @@ public class AgentController {
 
   	//add agent
     @PostMapping("/agents")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Register agent -- BY ADMIN & EMPLOYEE")
     public ResponseEntity<String> register(HttpServletRequest request,@RequestBody AgentRegisterRequest registerDto) throws AccessDeniedException{
       String authorizationHeader = request.getHeader("Authorization");
@@ -48,7 +46,6 @@ public class AgentController {
     }
 
     @PutMapping("/agent/{agent_id}")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Update agent -- BY ADMIN & EMPLOYEE")    
     public ResponseEntity<String> updateAgent(@PathVariable String agent_id, @RequestBody AgentRegisterRequest agentRequest) {
         String response = service.updateAgent(agent_id, agentRequest);
@@ -57,7 +54,6 @@ public class AgentController {
     
     // delete agent
     @DeleteMapping("/agent/{agent_id}")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Delete agent -- BY ADMIN & EMPLOYEE")
     public ResponseEntity<String> deleteAgent(@PathVariable String agent_id) {
         String response = service.deleteAgent(agent_id);
@@ -66,7 +62,6 @@ public class AgentController {
 
     // activate agent
     @PutMapping("/agent/{agent_id}/active")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Activate agent -- BY ADMIN & EMPLOYEE")    
     public ResponseEntity<String> activateAgent(@PathVariable String agent_id) {
         String response = service.activateAgent(agent_id);
@@ -75,7 +70,6 @@ public class AgentController {
 
     //get all agents
     @GetMapping("/agents")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get all agents -- BY ADMIN & EMPLOYEE")    
     public ResponseEntity<PagedResponse<AgentResponse>> getAllAgents(
             @RequestParam (name="page", defaultValue="0") int page,

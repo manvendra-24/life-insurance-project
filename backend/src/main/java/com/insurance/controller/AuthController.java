@@ -5,11 +5,8 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.AccessDeniedException;
 
 import org.slf4j.Logger;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +27,6 @@ import com.insurance.interfaces.IAuthService;
 
 @RestController
 @RequestMapping("/SecureLife.com")
-
-@CrossOrigin(origins = "http://localhost:3000",exposedHeaders=HttpHeaders.AUTHORIZATION)
 public class AuthController {
 
     private IAuthService authService;
@@ -62,8 +57,7 @@ public class AuthController {
     
 
     // Build Register REST API
-    @PostMapping("/admins")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/register")
     @Operation(summary = "Register Admin -- BY ADMIN")
     public ResponseEntity<String> register(@RequestBody AdminRegisterRequest registerDto){
       logger.info("A user is trying to register ");
@@ -75,7 +69,7 @@ public class AuthController {
     @PutMapping("/profile/update")
     @Operation(summary = "Profile update  -- For All")
     public ResponseEntity<String>updateProfile(HttpServletRequest request,@RequestBody ProfileRequest profileRequest) throws AccessDeniedException{
-    	 String authorizationHeader = request.getHeader("Authorization");
+       String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
              String token = authorizationHeader.substring(7);
            String response = authService.profileUpdate(token,profileRequest );
@@ -89,7 +83,7 @@ public class AuthController {
     @PutMapping("/password/change")
     @Operation(summary = "Password change  -- For All")
     public ResponseEntity<String>changePassword(HttpServletRequest request,@RequestBody ChangePasswordRequest profileRequest) throws AccessDeniedException{
-    	 String authorizationHeader = request.getHeader("Authorization");
+       String authorizationHeader = request.getHeader("Authorization");
          if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
              String token = authorizationHeader.substring(7);
            String response = authService.changePassword(token,profileRequest );

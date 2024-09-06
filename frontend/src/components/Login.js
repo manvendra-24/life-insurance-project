@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Card,  } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 
 import { loginService } from '../services/AuthService';
 
-import { successToast,errorToast } from '../sharedComponents/MyToast';
+import { successToast, errorToast } from '../sharedComponents/MyToast';
 import { ToastContainer } from 'react-toastify';
 
 
@@ -16,31 +16,29 @@ const Login = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const data = await loginService(email, password);
-
       if (data.role === 'Role_Admin') {
-        successToast('Logged in successfully!', 'success');
+        successToast('Logged in successfully!');
         navigate('/admin-dashboard');
       } 
       else if (data.role === 'Role_Customer') {
-        successToast('Logged in successfully!', 'success');
+        successToast('Logged in successfully!');
         navigate('/customer-dashboard');
-      }
-      else if (data.role === 'Role_Agent') {
-        successToast('Logged in successfully!', 'success');
+      } else if (data.role === 'Role_Agent') {
+        successToast('Logged in successfully!');
         navigate('/agent-dashboard');
-      }
-      else if (data.role === 'Role_Employee') {
-        successToast('Logged in successfully!', 'success');
-        navigate('/employee-dashboard');
+      } 
+      else if (data.role === 'Role_Customer') {
+        successToast('Logged in successfully!');
+        navigate('/customer-dashboard');
       }
     } catch(error){
       setError(error.specificMessage);
-      errorToast(error.specificMessage, 'error')
+      errorToast(error.specificMessage)
     }
   };
 
@@ -89,7 +87,7 @@ const Login = () => {
         </Col>
       </Row>
       </Container>
-      <ToastContainer/>
+      <ToastContainer />
     </Container>
   );
 };

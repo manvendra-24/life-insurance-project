@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +25,7 @@ public class PolicyController {
     private IPolicyService service;
 
     
-    @PostMapping("/policies")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PostMapping("/policies/register")
     @Operation(summary = "Register policy -- BY CUSTOMER")
     public ResponseEntity<String> createPolicy(HttpServletRequest request, @Valid @RequestBody PolicyRequest policyRequest) {
         String authorizationHeader = request.getHeader("Authorization");
@@ -40,7 +38,6 @@ public class PolicyController {
     }
 
     @GetMapping("/policies")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get all Policies -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<PagedResponse<PolicyResponse>> getAllPolicies(
     		HttpServletRequest request,
@@ -58,7 +55,6 @@ public class PolicyController {
     }
 
     @GetMapping("/customer/{customerId}/policies")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get Policies by Customer ID -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<PagedResponse<PolicyResponse>> getPoliciesByCustomerId(
             HttpServletRequest request,
@@ -78,7 +74,6 @@ public class PolicyController {
     }
     
     @GetMapping("/agent/{agentId}/policies")
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
     @Operation(summary = "Get Policies by Agent ID -- BY EMPLOYEE & ADMIN")
     public ResponseEntity<PagedResponse<CommissionResponse>> getCommissionByAgentId(
             HttpServletRequest request,
@@ -98,7 +93,6 @@ public class PolicyController {
     }
     
     @GetMapping("/mycommissions")
-    @PreAuthorize("hasRole('AGENT')")
     @Operation(summary = "Get My Commission report -- BY Agent")
     public ResponseEntity<PagedResponse<CommissionResponse>> getMyCommission(
             HttpServletRequest request,
@@ -117,7 +111,6 @@ public class PolicyController {
     }
 
     @GetMapping("/mypolicies")
-    @PreAuthorize("hasRole('CUSTOMER')")
     @Operation(summary = "Get My Policies -- BY CUSTOMER")
     public ResponseEntity<PagedResponse<PolicyResponse>> getMyPolicies(
             HttpServletRequest request,

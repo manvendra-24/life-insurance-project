@@ -26,7 +26,7 @@ export const isAlphaNumNoSpace = (value) => {
 
 export const checkSize = (value, min, max) => {
   if (!validator.isLength(value, { min, max })) {
-    return`Must be between ${min} and ${max} characters`;
+    return `Must be between ${min} and ${max} characters`;
   }
 };
 

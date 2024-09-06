@@ -42,21 +42,33 @@ export const loginService = async (usernameOrEmail, password) => {
     try {
       const response = await axios.post(`http://localhost:8081/SecureLife.com/login`, { usernameOrEmail, password }, {
         headers: { 'Content-Type': 'application/json' }
+<<<<<<< HEAD
 
       });
 
 
     const token = response.headers['authorization'];
+=======
+      });
+      const token = response.headers['authorization'];
+>>>>>>> 8fa54374722a0ecd854084a1ec2dd44cf32d35a3
 
     if (token) {
       localStorage.setItem('token', token);
     }
+<<<<<<< HEAD
     console.log(response.data);
+=======
+>>>>>>> 8fa54374722a0ecd854084a1ec2dd44cf32d35a3
       return response.data;
     } catch (error) {
         if(error.response && error.response.status === 400){
             throw new InvalidCredentialError("Invalid Credentials");
+<<<<<<< HEAD
         }else{
+=======
+        }else if(error.response && error.response.status === 401){
+>>>>>>> 8fa54374722a0ecd854084a1ec2dd44cf32d35a3
             throw new InternalServerError("Internal Server Error");
         }
     }
@@ -74,10 +86,15 @@ export const loginService = async (usernameOrEmail, password) => {
                 Authorization: `Bearer ${token}`,
             },
         });
+<<<<<<< HEAD
         
         return response.data;
     } catch (error) {
         
+=======
+        return response.data;
+    } catch (error) {
+>>>>>>> 8fa54374722a0ecd854084a1ec2dd44cf32d35a3
         throw error;
     }
   };
@@ -95,10 +112,16 @@ export const loginService = async (usernameOrEmail, password) => {
                 Authorization: `Bearer ${token}`,
             },
         });
+<<<<<<< HEAD
         console.log(response.data);
         return response.data;
     } catch (error) {
       
+=======
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+>>>>>>> 8fa54374722a0ecd854084a1ec2dd44cf32d35a3
         throw error;
     }
 };
