@@ -39,12 +39,14 @@ public class SecurityConfiguration {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http.csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authorize -> authorize
+	        		
 	            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml", 
 	                             "/swagger-resources/**", "/swagger-ui.html", "/webjars/**").permitAll()
 	            .requestMatchers("/SecureLife.com/login").permitAll()
 	            .requestMatchers("/SecureLife.com/profile").permitAll()
 	            .requestMatchers("/SecureLife.com/password").permitAll()
 	            .requestMatchers("/SecureLife.com/otp").permitAll()
+	            .requestMatchers("/SecureLife.com/admins").permitAll()
 	            .anyRequest().authenticated()
 	        )
 	        .exceptionHandling(exception -> exception

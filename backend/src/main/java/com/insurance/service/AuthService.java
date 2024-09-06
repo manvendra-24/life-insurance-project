@@ -137,16 +137,16 @@ public class AuthService implements IAuthService {
         admin.setUser(user);
         admin.setPhoneNumber(registerDto.getPhoneNumber());
         adminRepository.save(admin);
-        String subject = "Welcome to SecureLife Insurance - Your Admin Account Has Been Created!";
-        String emailBody = "Dear " + registerDto.getName() + ",\n\n" +
-                           "Congratulations! Your admin account has been successfully created at SecureLife Insurance. " +
-                           "You are now a part of our trusted administrative team overseeing important aspects of the company.\n\n" +
-                           "Best Regards,\n" +
-                           "SecureLife Insurance Team";
-
-        
-        emailService.sendEmail(user.getEmail(), subject, emailBody);
-        
+//        String subject = "Welcome to SecureLife Insurance - Your Admin Account Has Been Created!";
+//        String emailBody = "Dear " + registerDto.getName() + ",\n\n" +
+//                           "Congratulations! Your admin account has been successfully created at SecureLife Insurance. " +
+//                           "You are now a part of our trusted administrative team overseeing important aspects of the company.\n\n" +
+//                           "Best Regards,\n" +
+//                           "SecureLife Insurance Team";
+//
+//        
+//        emailService.sendEmail(user.getEmail(), subject, emailBody);
+//        
         logger.info("Admin registered successfully with username: {}", registerDto.getUsername());
         return "Admin registered successfully!";
     }
